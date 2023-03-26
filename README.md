@@ -1,3 +1,3 @@
-#JETFLIX
+# JETFLIX
 
 Netflix clone using reatJS
