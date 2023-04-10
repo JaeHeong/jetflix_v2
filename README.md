@@ -10,5 +10,6 @@
 ### -넷플릭스 디자인 OTT서비스를 3-Tier Architecture 온프레미스 환경으로 구현
 
 <img src="https://blog.kakaocdn.net/dn/L4n02/btrtieKhFOB/x18zXuuAzJNjFKc1vCx64k/img.png"/>
-이름
+
+프론트엔드 부분은 React를 통해서 구현하고 vmware를 통해 가상 네트워크 환경 속에 3-Tier Architecture를 구현
 #### -프로젝트 진행하면서 발생하는 이슈 정리
