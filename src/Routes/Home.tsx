@@ -3,13 +3,18 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
-import { getVideos } from "../api";
+import { deleteVideo, getVideos } from "../api";
 import { IVideo } from "../api";
-import { makeBgPath, makePosterPath } from "../utils";
+import { makeBgPath, makePlayPath, makePosterPath } from "../utils";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretRight, faCaretLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCaretRight,
+  faCaretLeft,
+  faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
 import useWindowDimensions from "../useWidowDimensions";
+import Swal from "sweetalert2";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -88,8 +93,8 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
 
 const BigMovie = styled(motion.div)`
   position: absolute;
-  width: 40vh;
-  height: 80vh;
+  width: 80vh;
+  height: 73vh;
   left: 0;
   right: 0;
   margin: 0 auto;
@@ -106,19 +111,59 @@ const BigCover = styled.div`
   height: 400px;
 `;
 
+const BigCloseBtn = styled.button`
+  position: absolute;
+  background-color: transparent;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  font-size: 15px;
+  right: 0;
+  margin-right: 7px;
+  margin-top: 5px;
+  font-weight: bold;
+  z-index: 103;
+  cursor: pointer;
+  :hover {
+    color: black;
+  }
+`;
+
+const BigPoster = styled(motion.div)`
+  position: relative;
+  background-size: cover;
+  height: 450px;
+  width: 300px;
+  bottom: 20%;
+  right: -20px;
+`;
+
+const BigInfoBox = styled.div`
+  position: relative;
+  bottom: 61%;
+  right: -42%;
+  width: 55%;
+`;
+
 const BigTitle = styled.h3`
   color: ${(props) => props.theme.white.lighter};
   padding: 10px;
   font-size: 46px;
   position: relative;
   top: -80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const BigOverview = styled.p`
-  padding: 20px;
+  padding: 10px;
   position: relative;
   color: ${(props) => props.theme.white.lighter};
   top: -80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const Overlay = styled(motion.div)`
@@ -164,12 +209,17 @@ const RightBtn = styled(motion.button)`
 
 library.add(faCaretRight);
 library.add(faCaretLeft);
+library.add(faTrashCan);
 
 const LeftArrow = () => {
   return <FontAwesomeIcon icon="caret-left" />;
 };
 const RightArrow = () => {
   return <FontAwesomeIcon icon="caret-right" />;
+};
+
+const TrashCan = () => {
+  return <FontAwesomeIcon icon="trash-can" />;
 };
 
 const boxVariants = {
@@ -212,10 +262,11 @@ function Home() {
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [back, setBack] = useState(false);
+  const [isFinish, setFinish] = useState(true);
 
   const width = useWindowDimensions();
 
-  let rowVariants = {
+  const rowVariants = {
     hidden: (back: boolean) => ({ x: back ? width + 5 : -width - 5 }),
     visible: { x: 0 },
     exit: (back: boolean) => ({ x: back ? -width - 5 : width + 5 }),
@@ -249,6 +300,34 @@ function Home() {
   };
   const onOverlayClick = () => {
     history.push("/");
+    setFinish(true);
+  };
+  const handlePlay = () => {
+    setFinish(false);
+  };
+  const handleDelete = (id: number) => {
+    Swal.fire({
+      title: "정말로 삭제 하시겠습니까?",
+      text: "다시 되돌릴 수 없습니다. 신중하세요.",
+      icon: "warning",
+
+      showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+      confirmButtonColor: "#3085d6", // confrim 버튼 색깔 지정
+      cancelButtonColor: "#d33", // cancel 버튼 색깔 지정
+      confirmButtonText: "승인", // confirm 버튼 텍스트 지정
+      cancelButtonText: "취소", // cancel 버튼 텍스트 지정
+
+      reverseButtons: false, // 버튼 순서 거꾸로
+    }).then((result) => {
+      // 만약 Promise리턴을 받으면,
+      if (result.isConfirmed) {
+        // 만약 모달창에서 confirm 버튼을 눌렀다면
+        deleteVideo(id);
+        // Swal.fire("삭제가 완료되었습니다.", "", "success");
+        history.push("/");
+        history.go(0);
+      }
+    });
   };
 
   const clickedMovie =
@@ -324,13 +403,41 @@ function Home() {
                   exit={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                 />
+                {clickedMovie && !isFinish ? (
+                  <motion.video
+                    autoPlay
+                    controls
+                    style={{
+                      position: "absolute",
+                      top: scrollY.get() + 200,
+                      left: "25%",
+                      width: "88vh",
+                      zIndex: 105,
+                    }}
+                    layoutId={bigMovieMatch.params.movieId}
+                  >
+                    <source
+                      src={makePlayPath(clickedMovie.id)}
+                      type="video/mp4"
+                    />
+                  </motion.video>
+                ) : null}
                 <BigMovie
-                  style={{ top: scrollY.get() + 100 }}
+                  style={{ top: scrollY.get() + 130 }}
                   layoutId={bigMovieMatch.params.movieId}
                 >
                   {clickedMovie && (
                     <>
+                      <BigCloseBtn onClick={onOverlayClick}>X</BigCloseBtn>
                       <BigCover
+                        style={{
+                          padding: "150px",
+                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeBgPath(
+                            clickedMovie.id
+                          )})`,
+                        }}
+                      />
+                      <BigPoster
                         style={{
                           padding: "150px",
                           backgroundImage: `linear-gradient(to top, black, transparent), url(${makePosterPath(
@@ -338,8 +445,58 @@ function Home() {
                           )})`,
                         }}
                       />
-                      <BigTitle>{clickedMovie.title}</BigTitle>
-                      <BigOverview>{clickedMovie.overview}</BigOverview>
+                      <BigInfoBox>
+                        <BigTitle>
+                          {clickedMovie.title}
+                          <div
+                            style={{
+                              marginTop: "35px",
+                              display: "flex",
+                            }}
+                          >
+                            <div
+                              style={{
+                                backgroundColor: "white",
+                                color: "black",
+                                borderRadius: "5px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                width: "80px",
+                                height: "40px",
+                                fontSize: "20px",
+                                fontWeight: "bold",
+                                marginRight: "15px",
+                                cursor: "pointer",
+                                gap: "5px",
+                              }}
+                              onClick={handlePlay}
+                            >
+                              <RightArrow />
+                              재생
+                            </div>
+                            <div
+                              style={{
+                                borderColor: "white",
+                                borderWidth: "2px",
+                                borderStyle: "solid",
+                                borderRadius: "100%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                width: "40px",
+                                height: "40px",
+                                fontSize: "20px",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => handleDelete(clickedMovie.id)}
+                            >
+                              <TrashCan />
+                            </div>
+                          </div>
+                        </BigTitle>
+                        <BigOverview>{clickedMovie.overview}</BigOverview>
+                      </BigInfoBox>
                     </>
                   )}
                 </BigMovie>

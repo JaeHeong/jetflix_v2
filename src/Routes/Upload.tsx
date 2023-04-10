@@ -14,6 +14,7 @@ import {
   faVolumeHigh,
 } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
+import { useHistory } from "react-router-dom";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -230,6 +231,7 @@ type FormData = {
 };
 
 function Upload() {
+  const history = useHistory();
   const [formData, setFormData] = useState<FormData>({
     title: "",
     overview: "",
@@ -239,7 +241,7 @@ function Upload() {
   });
   const [isToggled, setToggle] = useState(false);
   const [isMuted, setMute] = useState(true);
-  const [isEnd, setEnd] = useState(false);
+  const [isFinish, setFinish] = useState(false);
 
   const handleIcon = (event: React.MouseEvent<HTMLElement>) => {
     setToggle((prev) => !prev);
@@ -322,6 +324,10 @@ function Upload() {
     data.append("title", formData.title);
     data.append("overview", formData.overview);
     try {
+      ToastSubmit.fire({
+        icon: "info",
+        title: "잠시만 기다려주세요...",
+      });
       await axios.post("http://192.168.163.20:8080/videos/upload", data, {
         headers: {
           "Content-Type": "multipart/form-data charset=UTF-8",
@@ -335,10 +341,12 @@ function Upload() {
         poster: { file: null, isValid: false },
         trailer: { file: null, isValid: false },
       });
-      ToastEnd.fire({
-        icon: "success",
-        title: "업로드 성공!",
-      });
+      // ToastEnd.fire({
+      //   icon: "success",
+      //   title: "업로드 성공!",
+      // });
+      history.push("/");
+      history.go(0);
     } catch (error) {
       console.log(error);
       ToastEnd.fire({
@@ -369,7 +377,7 @@ function Upload() {
   };
 
   const handleVideoEnd = () => {
-    setEnd((prev) => !prev);
+    setFinish((prev) => !prev);
   };
 
   return (
@@ -379,7 +387,7 @@ function Upload() {
       ) : (
         <>
           <Back id="back" bgphoto={makeBgPath(data![0].id)}>
-            {!isEnd ? (
+            {!isFinish ? (
               <Video
                 autoPlay
                 muted={isMuted}
@@ -493,7 +501,7 @@ function Upload() {
               transition={{ delay: 3, duration: 2.5 }}
               onClick={handleVolume}
             >
-              {!isEnd ? isMuted ? <VolumeOff /> : <VolumeOn /> : null}
+              {!isFinish ? isMuted ? <VolumeOff /> : <VolumeOn /> : null}
             </VolumeGroup>
           </Back>
         </>
