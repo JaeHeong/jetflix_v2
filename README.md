@@ -10,6 +10,7 @@
 <div align="center">
 	<img src="https://user-images.githubusercontent.com/62248291/230932015-60db8c4e-4fdd-40d0-8ed1-f1d03ad1f509.png"/>
 	<img src="https://user-images.githubusercontent.com/62248291/230932467-066f6fc9-ecff-4a68-a5b4-2650c2b1511b.png"/>
+	<img src="https://user-images.githubusercontent.com/62248291/230933203-7cc2169d-6b94-4abc-b416-184bf8227350.png"/>
 </div>
 
 ### -넷플릭스 디자인 OTT서비스를 3-Tier Architecture 온프레미스 환경으로 구현
