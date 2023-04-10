@@ -6,8 +6,11 @@ import {
   useScroll,
 } from "framer-motion";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { BASE_PATH, IVideo } from "../api";
+import axios from "axios";
+import { ErrorMessage } from "@hookform/error-message";
 
 const Nav = styled(motion.nav)`
   display: flex;
@@ -19,6 +22,7 @@ const Nav = styled(motion.nav)`
   font-size: 14px;
   padding: 20px 60px;
   color: white;
+  z-index: 100;
 `;
 
 const Col = styled.div`
@@ -30,6 +34,7 @@ const Logo = styled(motion.img)`
   margin-right: 50px;
   width: 95px;
   height: 25px;
+  cursor: pointer;
 `;
 
 const Items = styled.ul`
@@ -58,6 +63,7 @@ const Search = styled.form`
   svg {
     height: 25px;
   }
+  cursor: pointer;
 `;
 
 const Circle = styled(motion.span)`
@@ -110,7 +116,7 @@ interface IForm {
 function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const homeMatch = useRouteMatch("/");
-  const tvMatch = useRouteMatch("/tv");
+  const uploadMatch = useRouteMatch("/upload");
   const inputAnimation = useAnimation();
   const navAnimation = useAnimation();
   const { scrollY } = useScroll();
@@ -135,10 +141,23 @@ function Header() {
       navAnimation.start("top");
     }
   });
+
   const history = useHistory();
-  const { register, handleSubmit } = useForm<IForm>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<IForm>();
+
   const onValid = (data: IForm) => {
     history.push(`/search?keyword=${data.keyword}`);
+    setValue("keyword", "");
+    window.location.reload();
+  };
+
+  const handleVideoEnd = () => {
+    history.push("/");
   };
 
   return (
@@ -148,6 +167,7 @@ function Header() {
           variants={logoVariants}
           whileHover="animate"
           src={require("../Images/jetflix.png")}
+          onClick={handleVideoEnd}
         ></Logo>
         <Items>
           <Item>
@@ -156,8 +176,8 @@ function Header() {
             </Link>
           </Item>
           <Item>
-            <Link to="/tv">
-              Tv Shows {tvMatch && <Circle layoutId="circle" />}
+            <Link to="/upload">
+              Upload {uploadMatch && <Circle layoutId="circle" />}
             </Link>
           </Item>
         </Items>
@@ -172,18 +192,47 @@ function Header() {
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path
-              fillRule="evenodd"
-              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-              clipRule="evenodd"
-            ></path>
+            {!searchOpen ? (
+              <path
+                fillRule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clipRule="evenodd"
+              ></path>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+              </svg>
+            )}
           </motion.svg>
           <Input
-            {...register("keyword", { required: true, minLength: 2 })}
+            {...register("keyword", {
+              required: "이 입력란을 작성하세요.",
+              minLength: {
+                value: 2,
+                message: "2글자 이상 입력해주세요.",
+              },
+              pattern: {
+                value: /^[ㄱ-ㅎ가-힣a-zA-Z0-9\s]+$/,
+                message: "한글,영어,숫자만 입력하세요.",
+              },
+            })}
+            id="keyword"
+            type="text"
             animate={inputAnimation}
             initial={{ scaleX: 0 }}
             transition={{ type: "linear" }}
-            placeholder="Search for movie or tv show..."
+            placeholder="What is your favorite video?"
+          />
+          <ErrorMessage
+            errors={errors}
+            name="keyword"
+            render={({ message }) => {
+              return (
+                <p style={{ position: "fixed", top: 50, right: 100 }}>
+                  {searchOpen ? message : ""}
+                </p>
+              );
+            }}
           />
         </Search>
       </Col>
