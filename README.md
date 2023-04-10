@@ -9,7 +9,7 @@
 
 ### -넷플릭스 디자인 OTT서비스를 3-Tier Architecture 온프레미스 환경으로 구현
 
-![3tier](https://user-images.githubusercontent.com/62248291/230930932-03d2547c-01c3-4e01-b013-7e160d12af80.png)
+![3tier](https://user-images.githubusercontent.com/62248291/230931256-054ff059-b542-4e66-9698-fbf687c24a57.png)
 
 프론트엔드 부분은 React를 통해서 구현하고 vmware를 통해 가상 네트워크 환경 속에 3-Tier Architecture를 구현
 Web server는 아파치, WAS는 톰캣, DB는 mysql과 외부 스토리지를 만들어서 WAS와 NAS로 연결
