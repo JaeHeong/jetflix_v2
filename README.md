@@ -1,7 +1,6 @@
 # JETFLIX 🚀
 <div align="center">
 	<img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=React&logoColor=white" />
-	<img src="https://img.shields.io/badge/typescript-3178C6?style=flat&logo=typescript&logoColor=white" />
 	<img src="https://img.shields.io/badge/Apache-D22128?style=flat&logo=Apache&logoColor=white" />
 	<img src="https://img.shields.io/badge/apachetomcat-F8DC75?style=flat&logo=Apachetomcat&logoColor=white" />
 </div>
