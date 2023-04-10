@@ -7,6 +7,8 @@
 	<img src="https://img.shields.io/badge/mysql-4479A1?style=flat&logo=mysql&logoColor=white">
 </div>
 
+![3tier (1)](https://user-images.githubusercontent.com/62248291/230932015-60db8c4e-4fdd-40d0-8ed1-f1d03ad1f509.png)
+
 ### -넷플릭스 디자인 OTT서비스를 3-Tier Architecture 온프레미스 환경으로 구현
 
 ![3tier](https://user-images.githubusercontent.com/62248291/230931256-054ff059-b542-4e66-9698-fbf687c24a57.png)
