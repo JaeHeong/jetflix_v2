@@ -8,10 +8,8 @@
 </div>
 
 <div align="center">
-	
-![3tier (1)](https://user-images.githubusercontent.com/62248291/230932015-60db8c4e-4fdd-40d0-8ed1-f1d03ad1f509.png)
-	
-![3tier (2)](https://user-images.githubusercontent.com/62248291/230932467-066f6fc9-ecff-4a68-a5b4-2650c2b1511b.png)
+	![3tier (1)](https://user-images.githubusercontent.com/62248291/230932015-60db8c4e-4fdd-40d0-8ed1-f1d03ad1f509.png)
+	![3tier (2)](https://user-images.githubusercontent.com/62248291/230932467-066f6fc9-ecff-4a68-a5b4-2650c2b1511b.png)
 </div>
 
 ### -넷플릭스 디자인 OTT서비스를 3-Tier Architecture 온프레미스 환경으로 구현
