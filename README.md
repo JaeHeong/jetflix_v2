@@ -19,7 +19,7 @@
 
 ### -넷플릭스 디자인 OTT서비스를 3-Tier Architecture 온프레미스 환경으로 구현
 
-<div align="center">
+<div align="left">
 	
 | ![3tier](https://user-images.githubusercontent.com/62248291/230931256-054ff059-b542-4e66-9698-fbf687c24a57.png) |
 | ------------- |
