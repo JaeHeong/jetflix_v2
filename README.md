@@ -36,24 +36,21 @@ Web server는 아파치, WAS는 톰캣, DB는 mysql과 외부 스토리지를 �
 - 서버에 들어오는 요청을 재작성하여 index.html로 바꾸는 것이다.
 1. /etc/httpd/conf/httpd.conf 파일에
 ```
-	<Directory "/var/www/html">
-
+<Directory "/var/www/html">
     	Options -MultiViews
     	RewriteEngine On
     	RewriteCond %{REQUEST_FILENAME} !-f
     	RewriteRule ^ index.html [QSA,L]
 
     	Require all granted
-    </Directory> 
+</Directory> 
 ```
-이런 식으로 설정을 한다.
+	이런 식으로 설정을 한다.
 
 2. /etc/httpd/conf/httpd.conf 파일에
 ```
-	<IfModule>
-
-		LoadModule rewrite_module modules/mod_rewrite.so
-
-	</IfModule>
+<IfModule>
+	LoadModule rewrite_module modules/mod_rewrite.so
+</IfModule>
 ```
-을 추가한다.
+	을 추가한다.
