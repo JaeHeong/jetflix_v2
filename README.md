@@ -45,7 +45,7 @@ Web server는 아파치, WAS는 톰캣, DB는 mysql과 외부 스토리지를 �
     	Require all granted
 </Directory> 
 ```
-	이런 식으로 설정을 한다.
+이런 식으로 설정을 한다.
 
 2. /etc/httpd/conf/httpd.conf 파일에
 ```
@@ -53,4 +53,4 @@ Web server는 아파치, WAS는 톰캣, DB는 mysql과 외부 스토리지를 �
 	LoadModule rewrite_module modules/mod_rewrite.so
 </IfModule>
 ```
-	을 추가한다.
+을 추가한다.
