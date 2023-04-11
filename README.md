@@ -14,7 +14,8 @@
 	
 </div>
 
-<div align="center"><실제 구현한 웹 모습></div>
+| <div align="center"><실제 구현한 웹 모습></div> |
+| ------------- |
 
 ### -넷플릭스 디자인 OTT서비스를 3-Tier Architecture 온프레미스 환경으로 구현
 
