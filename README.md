@@ -7,6 +7,8 @@
 	<img src="https://img.shields.io/badge/mysql-4479A1?style=flat&logo=mysql&logoColor=white">
 </div>
 
+<실제 구현한 웹 모습>
+
 <div align="center" width="1000px">
 	<img src="https://user-images.githubusercontent.com/62248291/230932015-60db8c4e-4fdd-40d0-8ed1-f1d03ad1f509.png"/>
 	<img src="https://user-images.githubusercontent.com/62248291/230932467-066f6fc9-ecff-4a68-a5b4-2650c2b1511b.png"/>
