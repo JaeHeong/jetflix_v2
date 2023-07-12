@@ -58,7 +58,7 @@ const Form = styled.form`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 90vh;
   width: 60%;
   background-color: #f8f8f8;
   padding: 20px;
@@ -93,7 +93,7 @@ const UploadBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 200px;
+  height: 18%;
   width: 80%;
   border: 2px dashed #cccccc;
   padding: 20px;
@@ -321,17 +321,19 @@ function Upload() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // if (
-    //   !formData.background.file ||
-    //   !formData.poster.file ||
-    //   !formData.trailer.file
-    // ) {
-    //   ToastSubmit.fire({
-    //     icon: "warning",
-    //     title: "배경화면, 포스터, 비디오 영상 모두 선택해주세요.",
-    //   });
-    //   return;
-    // }
+    if (
+      !formData.background.file ||
+      !formData.poster.file ||
+      !formData.trailer.file ||
+      !formData.title ||
+      !formData.overview
+    ) {
+      ToastSubmit.fire({
+        icon: "warning",
+        title: "이미지 파일 및 동영상과 설명을 넣어주세요",
+      });
+      return;
+    }
     const data = new FormData();
     data.append("background", formData.background.file!);
     data.append("poster", formData.poster.file!);
@@ -344,20 +346,26 @@ function Upload() {
         title: "잠시만 기다려주세요...",
       });
 
-      axios
-        .post(apiUrl, { filename: "123" })
-        .then((response) => {
-          const presignedUrl = response.data;
-          // console.log(presignedUrl);
-          console.log(data.get("title"));
-          console.log(data.get("overview"));
-          axios
-            .put(presignedUrl, data.get("background"))
-            .then((response) => console.log(response))
-            .catch((error) => console.log(error));
-        })
-        .catch((error) => console.error(error));
-
+      data.forEach(async (value) => {
+        if ((value as File).type) {
+          await axios
+            .post(apiUrl, {
+              filename: `${(value as File).name}`,
+              title: `${data.get("title")}`,
+            })
+            .then(async (response) => {
+              const presignedUrl = response.data;
+              // console.log(presignedUrl);
+              await axios
+                .put(presignedUrl, value)
+                // .then((response) => console.log(response))
+                .catch((error) => console.log(error));
+            })
+            .catch((error) => console.error(error));
+        } else {
+          // handle title and overview
+        }
+      });
       // await axios.post("http://192.168.163.20:8080/videos/upload", data, {
       //   headers: {
       //     "Content-Type": "multipart/form-data charset=UTF-8",
@@ -371,12 +379,9 @@ function Upload() {
         poster: { file: null, isValid: false },
         trailer: { file: null, isValid: false },
       });
-      // ToastEnd.fire({
-      //   icon: "success",
-      //   title: "업로드 성공!",
-      // });
       // history.push("/");
       // history.go(0);
+      // --------------->  이거를 해야대 말아야대? 하면 s3에 제대로 안올라가고 안하면 머였더라?
     } catch (error) {
       console.log(error);
       ToastEnd.fire({
