@@ -15,6 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
+import { API_URL as apiUrl } from "../api";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -57,6 +58,7 @@ const Form = styled.form`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  height: 100vh;
   width: 60%;
   background-color: #f8f8f8;
   padding: 20px;
@@ -304,19 +306,32 @@ function Upload() {
     }));
   };
 
+  const convertToBase64 = (file: File) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (
-      !formData.background.file ||
-      !formData.poster.file ||
-      !formData.trailer.file
-    ) {
-      ToastSubmit.fire({
-        icon: "warning",
-        title: "배경화면, 포스터, 비디오 영상 모두 선택해주세요.",
-      });
-      return;
-    }
+    // if (
+    //   !formData.background.file ||
+    //   !formData.poster.file ||
+    //   !formData.trailer.file
+    // ) {
+    //   ToastSubmit.fire({
+    //     icon: "warning",
+    //     title: "배경화면, 포스터, 비디오 영상 모두 선택해주세요.",
+    //   });
+    //   return;
+    // }
     const data = new FormData();
     data.append("background", formData.background.file!);
     data.append("poster", formData.poster.file!);
@@ -328,11 +343,26 @@ function Upload() {
         icon: "info",
         title: "잠시만 기다려주세요...",
       });
-      await axios.post("http://192.168.163.20:8080/videos/upload", data, {
-        headers: {
-          "Content-Type": "multipart/form-data charset=UTF-8",
-        },
-      });
+
+      axios
+        .post(apiUrl, { filename: "123" })
+        .then((response) => {
+          const presignedUrl = response.data;
+          // console.log(presignedUrl);
+          console.log(data.get("title"));
+          console.log(data.get("overview"));
+          axios
+            .put(presignedUrl, data.get("background"))
+            .then((response) => console.log(response))
+            .catch((error) => console.log(error));
+        })
+        .catch((error) => console.error(error));
+
+      // await axios.post("http://192.168.163.20:8080/videos/upload", data, {
+      //   headers: {
+      //     "Content-Type": "multipart/form-data charset=UTF-8",
+      //   },
+      // });
       setToggle((prev) => !prev);
       setFormData({
         title: "",
@@ -345,8 +375,8 @@ function Upload() {
       //   icon: "success",
       //   title: "업로드 성공!",
       // });
-      history.push("/");
-      history.go(0);
+      // history.push("/");
+      // history.go(0);
     } catch (error) {
       console.log(error);
       ToastEnd.fire({
