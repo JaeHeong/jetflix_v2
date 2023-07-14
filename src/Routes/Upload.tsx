@@ -15,7 +15,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
-import { API_URL as apiUrl } from "../api";
+import { FILE_API_URL as fileApiUrl } from "../api";
+import { DB_API_URL as dbApiUrl } from "../api";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -334,6 +335,7 @@ function Upload() {
       });
       return;
     }
+    
     const data = new FormData();
     data.append("background", formData.background.file!);
     data.append("poster", formData.poster.file!);
@@ -346,26 +348,36 @@ function Upload() {
         title: "잠시만 기다려주세요...",
       });
 
-      data.forEach(async (value) => {
-        if ((value as File).type) {
-          await axios
-            .post(apiUrl, {
-              filename: `${(value as File).name}`,
-              title: `${data.get("title")}`,
-            })
-            .then(async (response) => {
-              const presignedUrl = response.data;
-              // console.log(presignedUrl);
-              await axios
-                .put(presignedUrl, value)
-                // .then((response) => console.log(response))
-                .catch((error) => console.log(error));
-            })
-            .catch((error) => console.error(error));
-        } else {
-          // handle title and overview
-        }
-      });
+      await axios
+      .post(dbApiUrl, {
+        title: `${data.get("title")}`,
+        overview: `${data.get("overview")}`
+      })
+      .then(async (response) => {
+        const id=response.data;
+        data.forEach(async (value, key) => {
+          if ((value as File).type) {
+            await axios
+              .post(fileApiUrl, {
+                key: `${key}`,
+                type:`${(value as File).type}`,
+                id: `${id}`,
+              })
+              .then(async (response) => {
+                const presignedUrl = response.data;
+                // console.log(presignedUrl);
+                await axios
+                  .put(presignedUrl, value)
+                  // .then((response) => console.log(response))
+                  .catch((error) => console.log(error));
+              })
+              .catch((error) => console.error(error));
+          } else {
+            // handle title and overview
+          }
+        });
+      })
+      .catch((error) => console.error(error));
       // await axios.post("http://192.168.163.20:8080/videos/upload", data, {
       //   headers: {
       //     "Content-Type": "multipart/form-data charset=UTF-8",
