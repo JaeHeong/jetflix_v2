@@ -1,8 +1,10 @@
 import axios from "axios";
 
 export const BASE_PATH = "http://192.168.163.20:8080";
-export const API_URL =
+export const FILE_API_URL =
   "https://duvd9ld2ab.execute-api.ap-northeast-2.amazonaws.com/prod/file-upload";
+export const DB_API_URL =
+  "https://duvd9ld2ab.execute-api.ap-northeast-2.amazonaws.com/prod/db-upload";
 
 export interface IVideo {
   id: number;
