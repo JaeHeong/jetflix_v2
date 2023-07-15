@@ -335,7 +335,7 @@ function Upload() {
       });
       return;
     }
-    
+
     const data = new FormData();
     data.append("background", formData.background.file!);
     data.append("poster", formData.poster.file!);
@@ -349,35 +349,35 @@ function Upload() {
       });
 
       await axios
-      .post(dbApiUrl, {
-        title: `${data.get("title")}`,
-        overview: `${data.get("overview")}`
-      })
-      .then(async (response) => {
-        const id=response.data;
-        data.forEach(async (value, key) => {
-          if ((value as File).type) {
-            await axios
-              .post(fileApiUrl, {
-                key: `${key}`,
-                type:`${(value as File).type}`,
-                id: `${id}`,
-              })
-              .then(async (response) => {
-                const presignedUrl = response.data;
-                // console.log(presignedUrl);
-                await axios
-                  .put(presignedUrl, value)
-                  // .then((response) => console.log(response))
-                  .catch((error) => console.log(error));
-              })
-              .catch((error) => console.error(error));
-          } else {
-            // handle title and overview
-          }
-        });
-      })
-      .catch((error) => console.error(error));
+        .post(dbApiUrl, {
+          title: `${data.get("title")}`,
+          overview: `${data.get("overview")}`,
+        })
+        .then(async (response) => {
+          const id = response.data;
+          data.forEach(async (value, key) => {
+            if ((value as File).type) {
+              await axios
+                .post(fileApiUrl, {
+                  key: `${key}`,
+                  type: `${(value as File).type}`,
+                  id: `${id}`,
+                })
+                .then(async (response) => {
+                  const presignedUrl = response.data;
+                  // console.log(presignedUrl);
+                  await axios
+                    .put(presignedUrl, value)
+                    // .then((response) => console.log(response))
+                    .catch((error) => console.log(error));
+                })
+                .catch((error) => console.error(error));
+            } else {
+              // handle title and overview
+            }
+          });
+        })
+        .catch((error) => console.error(error));
       // await axios.post("http://192.168.163.20:8080/videos/upload", data, {
       //   headers: {
       //     "Content-Type": "multipart/form-data charset=UTF-8",
