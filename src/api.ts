@@ -1,22 +1,24 @@
 import axios from "axios";
 
-export const BASE_PATH = "http://192.168.163.20:8080";
 export const FILE_API_URL =
   "https://duvd9ld2ab.execute-api.ap-northeast-2.amazonaws.com/prod/file-upload";
 export const DB_API_URL =
   "https://duvd9ld2ab.execute-api.ap-northeast-2.amazonaws.com/prod/db-upload";
+const BASE_PATH = "http://10.0.2.20:8080";
+const GET_ALL_URL =
+  "https://duvd9ld2ab.execute-api.ap-northeast-2.amazonaws.com/prod/get-all";
 
 export interface IVideo {
   id: number;
   title: string;
   overview: string;
-  bgPath: string;
-  posterPath: string;
-  videoPath: string;
+  // bgPath: string;
+  // posterPath: string;
+  // videoPath: string;
 }
 
 export function getVideos(): Promise<IVideo[]> {
-  return axios.get(`${BASE_PATH}/videos/get`).then((res) => shuffle(res.data));
+  return axios.get(`${GET_ALL_URL}`).then((res) => shuffle(res.data));
 }
 
 export async function searchVideos(keyword: string, setVideoList: any) {
