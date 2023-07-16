@@ -93,8 +93,8 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
 
 const BigMovie = styled(motion.div)`
   position: absolute;
-  width: 80vh;
-  height: 73vh;
+  width: 100vh;
+  height: 100vh;
   left: 0;
   right: 0;
   margin: 0 auto;
@@ -108,7 +108,7 @@ const BigCover = styled.div`
   width: 100%;
   background-size: cover;
   background-position: center center;
-  height: 400px;
+  height: 100px;
 `;
 
 const BigCloseBtn = styled.button`
@@ -133,16 +133,15 @@ const BigCloseBtn = styled.button`
 const BigPoster = styled(motion.div)`
   position: relative;
   background-size: cover;
-  height: 450px;
-  width: 300px;
-  bottom: 20%;
-  right: -20px;
+  height: 2%;
+  width: 2%;
+  top: 0;
+  left: 53%;
 `;
 
 const BigInfoBox = styled.div`
   position: relative;
-  bottom: 61%;
-  right: -42%;
+  bottom: 48%;
   width: 55%;
 `;
 
@@ -324,8 +323,8 @@ function Home() {
         // 만약 모달창에서 confirm 버튼을 눌렀다면
         deleteVideo(id);
         // Swal.fire("삭제가 완료되었습니다.", "", "success");
-        history.push("/");
-        history.go(0);
+        // history.push("/");
+        // history.go(0);
       }
     });
   };
