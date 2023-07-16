@@ -347,7 +347,6 @@ function Upload() {
         icon: "info",
         title: "잠시만 기다려주세요...",
       });
-
       await axios
         .post(dbApiUrl, {
           title: `${data.get("title")}`,
@@ -368,6 +367,12 @@ function Upload() {
                   // console.log(presignedUrl);
                   await axios
                     .put(presignedUrl, value)
+                    .then(() => {
+                      history.push("/");
+                    })
+                    .then(() => {
+                      history.go(0);
+                    })
                     // .then((response) => console.log(response))
                     .catch((error) => console.log(error));
                 })
