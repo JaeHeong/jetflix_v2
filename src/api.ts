@@ -4,7 +4,10 @@ export const FILE_API_URL =
   "https://duvd9ld2ab.execute-api.ap-northeast-2.amazonaws.com/prod/file-upload";
 export const DB_API_URL =
   "https://duvd9ld2ab.execute-api.ap-northeast-2.amazonaws.com/prod/db-upload";
+
 const BASE_PATH = "http://10.0.2.20:8080";
+const DEL_API_URL =
+  "https://duvd9ld2ab.execute-api.ap-northeast-2.amazonaws.com/prod/delete";
 const GET_ALL_URL =
   "https://duvd9ld2ab.execute-api.ap-northeast-2.amazonaws.com/prod/get-all";
 
@@ -31,7 +34,7 @@ export async function searchVideos(keyword: string, setVideoList: any) {
 }
 
 export function deleteVideo(id: number) {
-  return axios.get(`${BASE_PATH}/videos/delete/${id}`);
+  return axios.post(`${DEL_API_URL}/${id}`);
 }
 
 function shuffle(array: IVideo[]) {
