@@ -8,8 +8,8 @@ import {
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { BASE_PATH, IVideo } from "../api";
-import axios from "axios";
+// import { BASE_PATH, IVideo } from "../api";
+// import axios from "axios";
 import { ErrorMessage } from "@hookform/error-message";
 
 const Nav = styled(motion.nav)`
