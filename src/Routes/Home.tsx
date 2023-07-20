@@ -75,7 +75,7 @@ const Info = styled(motion.div)`
   }
 `;
 
-const Box = styled(motion.div)<{ bgphoto: string }>`
+const Box = styled(motion.div) <{ bgphoto: string }>`
   background-color: white;
   background-image: url(${(props) => props.bgphoto});
   background-size: cover;
@@ -322,7 +322,7 @@ function Home() {
       // 만약 Promise리턴을 받으면,
       if (result.isConfirmed) {
         // 만약 모달창에서 confirm 버튼을 눌렀다면
-        deleteVideo(id).then(()=>{history.push("/")}).then(()=>{history.go(0)});
+        deleteVideo(id).then(() => { history.push("/") }).then(() => { history.go(0) });
         // Swal.fire("삭제가 완료되었습니다.", "", "success");
         // history.push("/");
         // history.go(0);
@@ -404,9 +404,24 @@ function Home() {
                   animate={{ opacity: 1 }}
                 />
                 {clickedMovie && !isFinish ? (
-                  <motion.video
-                    autoPlay
-                    controls
+                  // <motion.video
+                  //   autoPlay
+                  //   controls
+                  //   style={{
+                  //     position: "absolute",
+                  //     top: scrollY.get() + 200,
+                  //     left: "25%",
+                  //     width: "88vh",
+                  //     zIndex: 105,
+                  //   }}
+                  //   layoutId={bigMovieMatch.params.movieId}
+                  // >
+                  //   <source
+                  //     src={makePlayPath(clickedMovie.id)}
+                  //     type="video/mp4"
+                  //   />
+                  // </motion.video>
+                  <motion.div
                     style={{
                       position: "absolute",
                       top: scrollY.get() + 200,
@@ -416,11 +431,13 @@ function Home() {
                     }}
                     layoutId={bigMovieMatch.params.movieId}
                   >
-                    <source
-                      src={makePlayPath(clickedMovie.id)}
-                      type="video/mp4"
+                    <ReactPlayer
+                      playing={true}
+                      // muted={true}
+                      controls={true}
+                      url={makePlayPath(clickedMovie.id)}
                     />
-                  </motion.video>
+                  </motion.div>
                 ) : null}
                 <BigMovie
                   style={{ top: scrollY.get() + 130 }}
