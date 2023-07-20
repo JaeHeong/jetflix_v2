@@ -17,6 +17,7 @@ import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 import { FILE_API_URL as fileApiUrl } from "../api";
 import { DB_API_URL as dbApiUrl } from "../api";
+import ReactPlayer from "react-player";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -346,6 +347,7 @@ function Upload() {
       ToastSubmit.fire({
         icon: "info",
         title: "잠시만 기다려주세요...",
+        timer: 10000
       });
       await axios
         .post(dbApiUrl, {
@@ -368,10 +370,10 @@ function Upload() {
                   await axios
                     .put(presignedUrl, value)
                     .then(() => {
-                      history.push("/");
-                    })
-                    .then(() => {
-                      history.go(0);
+                      setTimeout(() => {
+                        history.push("/");
+                        history.go(0);
+                      }, 10000);
                     })
                     // .then((response) => console.log(response))
                     .catch((error) => console.log(error));

@@ -5,7 +5,7 @@ export const FILE_API_URL =
 export const DB_API_URL =
   "https://duvd9ld2ab.execute-api.ap-northeast-2.amazonaws.com/prod/db-upload";
 
-const BASE_PATH = "http://10.0.2.20:8080";
+const SEARCH_API_URL = "https://duvd9ld2ab.execute-api.ap-northeast-2.amazonaws.com/prod/search";
 const DEL_API_URL =
   "https://duvd9ld2ab.execute-api.ap-northeast-2.amazonaws.com/prod/delete";
 const GET_ALL_URL =
@@ -28,7 +28,7 @@ export async function searchVideos(keyword: string, setVideoList: any) {
   if (keyword)
     /*remove if(keyword), then search "  " => show all videos, For test*/
     return await axios
-      .get(`${BASE_PATH}/videos/get/${keyword.split(" ").join("")}`)
+      .get(`${SEARCH_API_URL}/${keyword.split(" ").join("")}`)
       .then((res) => setVideoList(res.data))
       .catch((error) => console.log(error));
 }
