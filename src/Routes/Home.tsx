@@ -75,7 +75,7 @@ const Info = styled(motion.div)`
   }
 `;
 
-const Box = styled(motion.div) <{ bgphoto: string }>`
+const Box = styled(motion.div)<{ bgphoto: string }>`
   background-color: white;
   background-image: url(${(props) => props.bgphoto});
   background-size: cover;
@@ -322,7 +322,13 @@ function Home() {
       // 만약 Promise리턴을 받으면,
       if (result.isConfirmed) {
         // 만약 모달창에서 confirm 버튼을 눌렀다면
-        deleteVideo(id).then(() => { history.push("/") }).then(() => { history.go(0) });
+        deleteVideo(id)
+          .then(() => {
+            history.push("/");
+          })
+          .then(() => {
+            history.go(0);
+          });
         // Swal.fire("삭제가 완료되었습니다.", "", "success");
         // history.push("/");
         // history.go(0);
@@ -433,7 +439,7 @@ function Home() {
                   >
                     <ReactPlayer
                       playing={true}
-                      // muted={true}
+                      // muted={true}s
                       controls={true}
                       url={makePlayPath(clickedMovie.id)}
                     />
