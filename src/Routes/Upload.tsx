@@ -5,7 +5,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { useQuery } from "react-query";
 import { IVideo, getVideos } from "../api";
-import { makeBgPath, makePlayPath } from "../utils";
+import { makeBgPath, makePlayBgPath } from "../utils";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -17,7 +17,6 @@ import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 import { FILE_API_URL as fileApiUrl } from "../api";
 import { DB_API_URL as dbApiUrl } from "../api";
-import ReactPlayer from "react-player";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -347,7 +346,7 @@ function Upload() {
       ToastSubmit.fire({
         icon: "info",
         title: "잠시만 기다려주세요...",
-        timer: 10000
+        timer: 10000,
       });
       await axios
         .post(dbApiUrl, {
@@ -450,7 +449,7 @@ function Upload() {
                 transition={{ delay: 2, duration: 3 }}
                 onEnded={handleVideoEnd}
               >
-                <source src={makePlayPath(data![0].id)} type="video/mp4" />
+                <source src={makePlayBgPath(data![0].id)} type="video/mp4" />
               </Video>
             ) : null}
             {isToggled ? (

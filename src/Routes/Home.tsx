@@ -439,7 +439,7 @@ function Home() {
                   >
                     <ReactPlayer
                       playing={true}
-                      // muted={true}s
+                      // muted={true}
                       controls={true}
                       url={makePlayPath(clickedMovie.id)}
                     />
