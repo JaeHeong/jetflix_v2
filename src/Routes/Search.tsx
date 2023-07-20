@@ -10,9 +10,20 @@ import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
-import { makeBgPath, makePlayPath, makePosterPath } from "../utils";
+import {
+  makeBgPath,
+  makePlayPathFHD,
+  makePlayPath720p,
+  makePlayPath360p,
+  makePlayPathAuto,
+  makePosterPath,
+} from "../utils";
 import { IVideo, deleteVideo, searchVideos } from "../api";
 import Swal from "sweetalert2";
+import { SUB_URL as subURL } from "../api";
+import { Player } from "react-tuby";
+import "react-tuby/css/main.css";
+import ReactHlsPlayer from "react-hls-player";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -401,23 +412,54 @@ function Search() {
                   animate={{ opacity: 1 }}
                 />
                 {clickedMovie && !isFinish ? (
-                  <motion.video
-                    autoPlay
-                    controls
+                  <motion.div
                     style={{
                       position: "absolute",
-                      top: scrollY.get() + 100,
+                      top: scrollY.get() + 200,
                       left: "25%",
                       width: "88vh",
                       zIndex: 105,
                     }}
                     layoutId={bigMovieMatch.params.movieId}
                   >
-                    <source
-                      src={makePlayPath(clickedMovie.id)}
-                      type="video/mp4"
-                    />
-                  </motion.video>
+                    <Player
+                      src={[
+                        {
+                          quality: 1080,
+                          url: `${makePlayPathFHD(clickedMovie.id)}`,
+                        },
+                        {
+                          quality: 720,
+                          url: `${makePlayPath720p(clickedMovie.id)}`,
+                        },
+                        {
+                          quality: 360,
+                          url: `${makePlayPath360p(clickedMovie.id)}`,
+                        },
+                        {
+                          quality: "Auto",
+                          url: `${makePlayPathAuto(clickedMovie.id)}`,
+                        },
+                      ]}
+                      subtitles={[
+                        {
+                          lang: "ko",
+                          language: "Korean",
+                          url: `${subURL}/${clickedMovie.id}/ko.vtt`,
+                        },
+                        {
+                          lang: "en",
+                          language: "English",
+                          url: `${subURL}/${clickedMovie.id}/en.vtt`,
+                        },
+                      ]}
+                      // poster="https://d1bug73j39exox.cloudfront.net/45/post.jpeg"
+                    >
+                      {(ref, props) => (
+                        <ReactHlsPlayer playerRef={ref} {...props} />
+                      )}
+                    </Player>
+                  </motion.div>
                 ) : null}
                 <BigMovie
                   style={{ top: scrollY.get() }}

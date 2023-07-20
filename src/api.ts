@@ -4,8 +4,10 @@ export const FILE_API_URL =
   "https://duvd9ld2ab.execute-api.ap-northeast-2.amazonaws.com/prod/file-upload";
 export const DB_API_URL =
   "https://duvd9ld2ab.execute-api.ap-northeast-2.amazonaws.com/prod/db-upload";
+export const SUB_URL = "https://d1iyk3lsjkkhxd.cloudfront.net";
 
-const SEARCH_API_URL = "https://duvd9ld2ab.execute-api.ap-northeast-2.amazonaws.com/prod/search";
+const SEARCH_API_URL =
+  "https://duvd9ld2ab.execute-api.ap-northeast-2.amazonaws.com/prod/search";
 const DEL_API_URL =
   "https://duvd9ld2ab.execute-api.ap-northeast-2.amazonaws.com/prod/delete";
 const GET_ALL_URL =
