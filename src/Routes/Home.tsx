@@ -26,6 +26,10 @@ import { SUB_URL as subURL } from "../api";
 import { Player } from "react-tuby";
 import "react-tuby/css/main.css";
 import ReactHlsPlayer from "react-hls-player";
+import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
+import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
+import { Kinesis, PutRecordsCommand } from "@aws-sdk/client-kinesis";
+import { pool_id } from "../pool_key";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -312,9 +316,33 @@ function Home() {
     history.push("/");
     setFinish(true);
   };
-  const handlePlay = () => {
+
+  const handlePlay = (movieId: number) => {
     setFinish(false);
+    var record = {
+      Data: JSON.stringify({
+        id: movieId,
+      }),
+      PartitionKey: "id" + Math.floor(Math.random() * 1000000).toString(),
+    };
+    recordData.push(record);
+    const uploadData = async () => {
+      try {
+        const data = await client.send(
+          new PutRecordsCommand({
+            Records: recordData,
+            StreamName: "my-stream-kinesis",
+          })
+        );
+        console.log("Kinesis updated, data: ", data);
+      } catch (err) {
+        console.log("Error", err);
+      }
+    };
+    uploadData();
+    recordData = [];
   };
+
   const handleDelete = (id: number) => {
     Swal.fire({
       title: "정말로 삭제 하시겠습니까?",
@@ -345,11 +373,20 @@ function Home() {
       }
     });
   };
-
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
     data?.find((movie) => movie.id === +bigMovieMatch.params.movieId);
-
+  //<---------------------------------------------------------------------------->
+  const REGION = "ap-northeast-2";
+  const client = new Kinesis({
+    region: REGION,
+    credentials: fromCognitoIdentityPool({
+      client: new CognitoIdentityClient({ region: REGION }),
+      identityPoolId: pool_id,
+    }),
+  });
+  var recordData = [] as any;
+  //<---------------------------------------------------------------------------->
   return (
     <Wrapper>
       {isLoading ? (
@@ -517,7 +554,8 @@ function Home() {
                                 cursor: "pointer",
                                 gap: "5px",
                               }}
-                              onClick={handlePlay}
+                              // onClick={handlePlay(clickedMovie.id)}
+                              onClick={() => handlePlay(clickedMovie.id)}
                             >
                               <RightArrow />
                               재생
