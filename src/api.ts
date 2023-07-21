@@ -41,6 +41,6 @@ export function deleteVideo(id: number) {
 }
 
 function shuffle(array: IVideo[]) {
-  array.sort(() => Math.random() - 0.5);
+  // array.sort(() => Math.random() - 0.5);
   return array;
 }
