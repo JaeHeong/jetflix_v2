@@ -24,6 +24,10 @@ import { SUB_URL as subURL } from "../api";
 import { Player } from "react-tuby";
 import "react-tuby/css/main.css";
 import ReactHlsPlayer from "react-hls-player";
+import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
+import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
+import { Kinesis, PutRecordCommand } from "@aws-sdk/client-kinesis";
+import { pool_id } from "../pool_key";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -304,8 +308,25 @@ function Search() {
     isExecuted = true;
     setFinish(true);
   };
-  const handlePlay = () => {
+  const handlePlay = (movieId: number) => {
     setFinish(false);
+    const encoder = new TextEncoder();
+    const uintArrayValue = encoder.encode(JSON.stringify({ id: movieId }));
+    const record = {
+      StreamName: "my-stream-kinesis",
+      Data: uintArrayValue,
+      PartitionKey: "1",
+    };
+    const uploadData = async () => {
+      try {
+        const data = await client.send(new PutRecordCommand(record));
+        console.log(typeof record);
+        console.log("Kinesis updated, data: ", data);
+      } catch (err) {
+        console.log("Error", err);
+      }
+    };
+    uploadData();
   };
   const handleDelete = (id: number) => {
     Swal.fire({
@@ -351,6 +372,17 @@ function Search() {
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
     videoList?.find((movie) => movie.id === +bigMovieMatch.params.movieId);
+
+  //<-------------AWS KINESIS--------------------------------------------------------------->
+  const REGION = "ap-northeast-2";
+  const client = new Kinesis({
+    region: REGION,
+    credentials: fromCognitoIdentityPool({
+      client: new CognitoIdentityClient({ region: REGION }),
+      identityPoolId: pool_id,
+    }),
+  });
+  //<--------------------------------------------------------------------------------------->
 
   return (
     <>
@@ -509,7 +541,7 @@ function Search() {
                                 cursor: "pointer",
                                 gap: "5px",
                               }}
-                              onClick={handlePlay}
+                              onClick={() => handlePlay(clickedMovie.id)}
                             >
                               <RightArrow />
                               재생

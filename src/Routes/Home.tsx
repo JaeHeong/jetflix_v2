@@ -28,11 +28,7 @@ import "react-tuby/css/main.css";
 import ReactHlsPlayer from "react-hls-player";
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
-import {
-  Kinesis,
-  PutRecordsCommand,
-  PutRecordCommand,
-} from "@aws-sdk/client-kinesis";
+import { Kinesis, PutRecordCommand } from "@aws-sdk/client-kinesis";
 import { pool_id } from "../pool_key";
 
 const Wrapper = styled.div`
