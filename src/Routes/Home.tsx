@@ -28,7 +28,11 @@ import "react-tuby/css/main.css";
 import ReactHlsPlayer from "react-hls-player";
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
-import { Kinesis, PutRecordsCommand } from "@aws-sdk/client-kinesis";
+import {
+  Kinesis,
+  PutRecordsCommand,
+  PutRecordCommand,
+} from "@aws-sdk/client-kinesis";
 import { pool_id } from "../pool_key";
 
 const Wrapper = styled.div`
@@ -319,28 +323,23 @@ function Home() {
 
   const handlePlay = (movieId: number) => {
     setFinish(false);
-    var record = {
-      Data: JSON.stringify({
-        id: movieId,
-      }),
-      PartitionKey: "id" + Math.floor(Math.random() * 1000000).toString(),
+    const encoder = new TextEncoder();
+    const uintArrayValue = encoder.encode(JSON.stringify({ id: movieId }));
+    const record = {
+      StreamName: "my-stream-kinesis",
+      Data: uintArrayValue,
+      PartitionKey: "1",
     };
-    recordData.push(record);
     const uploadData = async () => {
       try {
-        const data = await client.send(
-          new PutRecordsCommand({
-            Records: recordData,
-            StreamName: "my-stream-kinesis",
-          })
-        );
+        const data = await client.send(new PutRecordCommand(record));
+        console.log(typeof record);
         console.log("Kinesis updated, data: ", data);
       } catch (err) {
         console.log("Error", err);
       }
     };
     uploadData();
-    recordData = [];
   };
 
   const handleDelete = (id: number) => {
@@ -376,7 +375,7 @@ function Home() {
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
     data?.find((movie) => movie.id === +bigMovieMatch.params.movieId);
-  //<---------------------------------------------------------------------------->
+  //<-------------AWS KINESIS--------------------------------------------------------------->
   const REGION = "ap-northeast-2";
   const client = new Kinesis({
     region: REGION,
@@ -385,8 +384,7 @@ function Home() {
       identityPoolId: pool_id,
     }),
   });
-  var recordData = [] as any;
-  //<---------------------------------------------------------------------------->
+  //<--------------------------------------------------------------------------------------->
   return (
     <Wrapper>
       {isLoading ? (

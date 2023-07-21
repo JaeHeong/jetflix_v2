@@ -17,6 +17,7 @@ export interface IVideo {
   id: number;
   title: string;
   overview: string;
+  count: number;
   // bgPath: string;
   // posterPath: string;
   // videoPath: string;
