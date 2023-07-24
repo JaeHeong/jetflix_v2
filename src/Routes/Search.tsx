@@ -345,10 +345,16 @@ function Search() {
       // 만약 Promise리턴을 받으면,
       if (result.isConfirmed) {
         // 만약 모달창에서 confirm 버튼을 눌렀다면
-        deleteVideo(id);
+        deleteVideo(id)
+          .then(() => {
+            history.push("/");
+          })
+          .then(() => {
+            history.go(0);
+          });
         // Swal.fire("삭제가 완료되었습니다.", "", "success");
-        history.push("/");
-        history.go(0);
+        // history.push("/");
+        // history.go(0);
       }
     });
   };
